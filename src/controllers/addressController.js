@@ -21,6 +21,25 @@ export const getAddresses = async (req, res) => {
 	}
 };
 
+// Get all addresses and users
+export const getUsers = async (req, res) => {
+	try {
+		const addresses = await User.aggregate([
+			{
+				$lookup: {
+					from: "users",
+					localField: "_id",
+					foreignField: "address_id",
+					as: "users",
+				},
+			},
+		]);
+		res.status(200).json(addresses);
+	} catch (error) {
+		res.status(400).json({ message: error.message });
+	}
+};
+
 // Update address
 export const editAddress = async (req, res) => {
 	try {

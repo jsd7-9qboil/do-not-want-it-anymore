@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+const { Schema } = mongoose;
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
 	{
 		fname: {
 			type: String,
@@ -29,6 +30,10 @@ const userSchema = new mongoose.Schema(
 		isAdmin: {
 			type: Boolean,
 			default: false,
+		},
+		addresses: {
+			type: Schema.Types.ObjectId,
+			ref: "Address",
 		},
 	},
 	{ timestamps: true }

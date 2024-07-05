@@ -20,15 +20,29 @@ export const getUsers = async (req, res) => {
 	}
 };
 
-// Get user by ID
+// Get user by ID with their addresses
 export const getUserById = async (req, res, next) => {
 	try {
 		const { id } = req.params;
-		const user = await User.findById(id);
-		if (!user) {
+		const user = await User.aggregate([
+			{
+				$match: { _id: mongoose.Types.ObjectId(id) },
+			},
+			{
+				$lookup: {
+					from: "addresses",
+					localField: "_id",
+					foreignField: "customer_id",
+					as: "addresses",
+				},
+			},
+		]);
+
+		if (!user.length) {
 			return res.status(404).json({ message: `User with id ${id} not found` });
 		}
-		res.status(200).json({ message: "Get User By ID", data: user });
+
+		res.status(200).json(user[0]);
 	} catch (error) {
 		next(error);
 	}
@@ -76,6 +90,9 @@ export const deleteUser = async (req, res, next) => {
 		if (!deletedUser) {
 			return res.status(404).json({ message: `User with id ${id} not found` });
 		}
+
+		// Remove all addresses associated with the user
+		await Address.deleteMany({ customer_id: id });
 
 		res.status(200).json({ message: `User with id ${id} has been deleted` });
 	} catch (error) {
