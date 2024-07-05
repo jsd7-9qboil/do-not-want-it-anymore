@@ -8,7 +8,11 @@ const cartSchema = new mongoose.Schema(
       required: true,
     },
     quantity: {
+<<<<<<< HEAD
       type: Number,
+=======
+      type: Number, 
+>>>>>>> 18985ec56f6b37338b6ff27f9350d0f23e70dbad
       required: true,
     },
     price: {
@@ -18,6 +22,7 @@ const cartSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 const Cart = mongoose.model("Cart", cartSchema);
 
