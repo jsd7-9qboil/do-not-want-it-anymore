@@ -2,8 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
-import userRoutes from "./routes/userRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
+
+// routes
+import userRoutes from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import addressRoutes from "./routes/addressRoutes.js";
 
 dotenv.config();
 
@@ -18,10 +22,12 @@ app.use(cors());
 app.use(express.json());
 
 // Uncomment the line below if you want to apply auth middleware globally
-//app.use(authMiddleware);
+// app.use(authMiddleware);
 
 // Routes
 app.use("/api", userRoutes);
+app.use("/api", productRoutes);
+app.use("/api", addressRoutes);
 
 app.listen(port, () => {
 	console.log(`Server is running on port: ${port} 🍀`);
