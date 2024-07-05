@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 
 const cartSchema = new mongoose.Schema(
   {
@@ -8,11 +8,11 @@ const cartSchema = new mongoose.Schema(
       required: true,
     },
     quantity: {
-      Type: Number,
+      type: Number,
       required: true,
     },
     price: {
-      Type: Number,
+      type: Number,
       required: true,
     },
   },
