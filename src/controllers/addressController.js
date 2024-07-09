@@ -61,20 +61,14 @@ export const editAddress = async (req, res) => {
 	}
 };
 
-// Delete address
-export const deleteAddress = async (req, res) => {
-	try {
-		const { id } = req.params;
-		const deletedAddress = await Address.findByIdAndDelete(id);
-
-		if (!deletedAddress) {
-			return res
-				.status(404)
-				.json({ message: `Address with id ${id} not found` });
-		}
-
-		res.status(200).json({ message: `Address with id ${id} has been deleted` });
-	} catch (error) {
-		res.status(400).json({ message: error.message });
-	}
+export const getAddress = async (req, res) => {
+  try {
+    const address = await Address.findById(req.params.id);
+    if (!address) {
+      return res.status(404).json({ message: "Address not found." });
+    }
+    res.json(address);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };

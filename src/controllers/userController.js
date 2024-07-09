@@ -1,23 +1,24 @@
 import User from "../models/userModel.js";
-import Address from "../models/addressModel.js";
+import jwt from "jsonwebtoken";
 
-// Get all users with their addresses
-export const getUsers = async (req, res) => {
-	try {
-		const users = await User.aggregate([
-			{
-				$lookup: {
-					from: "addresses",
-					localField: "_id",
-					foreignField: "customer_id",
-					as: "addresses",
-				},
-			},
-		]);
-		res.status(200).json(users);
-	} catch (error) {
-		res.status(400).json({ message: error.message });
-	}
+//TODO specifically admin can register admin role, other user can not!!!
+
+export const registerUser = async (req, res) => {
+  try {
+    const { fname, lname, email, password, dob, isAdmin } = req.body;
+
+    const user = new User({ fname, lname, email, password, dob, isAdmin });
+    await user.save();
+
+    const token = jwt.sign(
+      { _id: user._id, email: user.email, isAdmin: user.isAdmin },
+      process.env.JWT_SECRET
+    );
+
+    res.status(201).json({ token });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 // Get user by ID with their addresses
@@ -48,32 +49,24 @@ export const getUserById = async (req, res, next) => {
 	}
 };
 
-// Create a new user
-export const createUser = async (req, res) => {
-	try {
-		const user = new User(req.body);
-		await user.save();
-		res.status(201).json(user);
-	} catch (error) {
-		res.status(400).json({ message: error.message });
-	}
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    res.json(user);
+  } catch (error) {
+    res.status(404).json({ message: "User not found." });
+  }
 };
 
-// Update profile
-export const editProfile = async (req, res, next) => {
-	try {
-		const { id } = req.params;
-		const { fname, lname, email, password } = req.body;
+export const updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
 
-		const updatedUser = await User.findByIdAndUpdate(
-			id,
-			{ fname, lname, email, password },
-			{ new: true, runValidators: true }
-		);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
 
-		if (!updatedUser) {
-			return res.status(404).json({ message: "User not found" });
-		}
+    const { fname, lname, email, password, dob, imgProfile } = req.body;
 
 		res.status(200).json(updatedUser);
 	} catch (error) {

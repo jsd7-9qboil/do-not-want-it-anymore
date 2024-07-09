@@ -1,10 +1,9 @@
 import express from "express";
 import {
-	createUser,
-	getUsers,
-	editProfile,
-	getUserById,
-	deleteUser,
+	registerUser,
+	loginUser,
+	getUserProfile,
+	updateUserProfile,
 } from "../controllers/userController.js";
 import { registerAdmin, loginAdmin } from "../services/userService.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
