@@ -8,6 +8,7 @@ import { authMiddleware } from "./middleware/authMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use("/api", userRoutes);
 app.use("/api", productRoutes);
 app.use("/api", cartRoutes);
+app.use("/api", orderRoutes);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port} 🍀`);
