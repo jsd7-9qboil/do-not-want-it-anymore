@@ -20,7 +20,7 @@ app.use(express.json());
 
 // use routes
 app.get("/", (req, res) => {
-  res.json({ data: "respond received from the server!" });
+	res.json({ data: "respond received from the server!" });
 });
 
 app.use("/users", userRoutes);
@@ -32,5 +32,5 @@ app.use(errorMiddleware);
 
 // start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} 🍀`);
+	console.log(`Server is running on port ${PORT} 🍀`);
 });
